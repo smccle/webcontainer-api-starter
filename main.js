@@ -1,11 +1,15 @@
-import './style.css'
+import './style.css';
 import { WebContainer } from '@webcontainer/api';
 import { files } from './files';
 
 /** @type {import('@webcontainer/api').WebContainer}  */
 let webcontainerInstance;
 
-window.addEventListener('load', async () => {
+window.addEventListener('load', load);
+
+document.getElementById('run').addEventListener('click', load);
+
+async function load() {
   textareaEl.value = files['index.js'].file.contents;
   textareaEl.addEventListener('input', (e) => {
     writeIndexJS(e.currentTarget.value);
@@ -18,19 +22,21 @@ window.addEventListener('load', async () => {
   const exitCode = await installDependencies();
   if (exitCode !== 0) {
     throw new Error('Installation failed');
-  };
+  }
 
   startDevServer();
-});
+}
 
 async function installDependencies() {
   // Install dependencies
   const installProcess = await webcontainerInstance.spawn('npm', ['install']);
-  installProcess.output.pipeTo(new WritableStream({
-    write(data) {
-      console.log(data);
-    }
-  }))
+  installProcess.output.pipeTo(
+    new WritableStream({
+      write(data) {
+        console.log(data);
+      },
+    })
+  );
   // Wait for install command to exit
   return installProcess.exit;
 }
@@ -62,7 +68,7 @@ document.querySelector('#app').innerHTML = `
       <iframe src="loading.html"></iframe>
     </div>
   </div>
-`
+`;
 
 /** @type {HTMLIFrameElement | null} */
 const iframeEl = document.querySelector('iframe');

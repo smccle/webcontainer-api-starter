@@ -2,6 +2,7 @@
   "name": "webcontainers-api-starter",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://smccle.github.io/webcontainer-api-starter",
   "type": "module",
   "scripts": {
     "dev": "vite",
